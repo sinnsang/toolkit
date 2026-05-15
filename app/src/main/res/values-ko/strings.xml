@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">Noowar Toolkit</string>
+
+    <!-- Permissions -->
+    <string name="permission_sms_required">SMS 및 연락처 권한이 필요합니다.</string>
+    <string name="btn_grant_permission">권한 허용</string>
+    <string name="notification_access_required">알림 접근 권한이 필요합니다.</string>
+    <string name="notification_access_guide">설정에서 Noowar Toolkit을 활성화하세요.</string>
+    <string name="btn_grant_notification_access">알림 접근 허용</string>
+
+    <!-- Rule List -->
+    <string name="title_rules">포워딩 규칙 관리</string>
+    <string name="cd_forward_log">전송 이력</string>
+    <string name="cd_settings">설정</string>
+    <string name="no_rules">등록된 규칙이 없습니다.</string>
+    <string name="no_rules_hint">+ 버튼을 눌러 규칙을 추가하세요.</string>
+    <string name="label_sender">발신번호: %s</string>
+    <string name="label_keyword">포함단어: %s</string>
+    <string name="label_all_sms">모든 SMS</string>
+    <string name="card_label_match">매칭: %s</string>
+    <string name="label_destination_empty">(번호 미설정)</string>
+    <string name="format_original">형식: 원본</string>
+    <string name="format_prepend">형식: 최상단 첨부</string>
+    <string name="format_append">형식: 최하단 첨부</string>
+    <string name="format_replace">형식: 대체</string>
+    <string name="cd_edit">편집</string>
+    <string name="cd_delete">삭제</string>
+
+    <!-- Rule Edit -->
+    <string name="title_add_rule">규칙 추가</string>
+    <string name="title_edit_rule">규칙 편집</string>
+    <string name="cd_back">뒤로</string>
+    <string name="section_filter">필터 조건</string>
+    <string name="label_sender_filter">발신번호 필터</string>
+    <string name="label_keyword_filter">포함 단어</string>
+    <string name="label_match_prefix">매칭:</string>
+    <string name="section_forward">전송 설정</string>
+    <string name="label_channel">채널:</string>
+    <string name="label_telegram">텔레그램</string>
+    <string name="label_chat_id">Chat ID</string>
+    <string name="label_phone_number">전송 번호</string>
+    <string name="btn_contacts">주소록</string>
+    <string name="section_format">메시지 형식</string>
+    <string name="format_original_label">받은 메시지 그대로</string>
+    <string name="format_prepend_label">최상단에 문자열 첨부</string>
+    <string name="format_append_label">최하단에 문자열 첨부</string>
+    <string name="format_replace_label">특정 문자열로 대체</string>
+    <string name="label_prepend_string">첨부 문자열</string>
+    <string name="label_append_string">첨부 문자열</string>
+    <string name="label_replace_string">대체 문자열</string>
+    <string name="btn_cancel">취소</string>
+    <string name="btn_save">저장</string>
+
+    <!-- Forward Log -->
+    <string name="title_forward_log">전송 이력</string>
+    <string name="no_logs">전송 이력이 없습니다.</string>
+    <string name="status_success">✓ 성공</string>
+    <string name="status_fail">✗ 실패</string>
+
+    <!-- Settings -->
+    <string name="title_settings">설정</string>
+    <string name="section_telegram_bot">텔레그램 봇</string>
+    <string name="saved_message">저장되었습니다.</string>
+    <string name="telegram_guide">봇 토큰 얻는 방법:\n1. 텔레그램에서 @BotFather 검색\n2. /newbot 입력 후 이름 설정\n3. 발급된 토큰을 위에 입력\n\nChat ID 확인:\n봇에게 메시지를 보낸 후\nhttps://api.telegram.org/bot{토큰}/getUpdates\n접속 → chat.id 값 확인</string>
+
+    <!-- Update dialogs -->
+    <string name="update_forced_title">업데이트 필요</string>
+    <string name="update_forced_body">이 버전은 더 이상 지원되지 않습니다. 앱을 계속 사용하려면 업데이트하세요.</string>
+    <string name="update_optional_title">새 버전 출시</string>
+    <string name="update_optional_body">Noowar Toolkit 새 버전이 출시되었습니다.</string>
+    <string name="btn_update_now">지금 업데이트</string>
+    <string name="btn_later">나중에</string>
+
+    <!-- Notification -->
+    <string name="notif_channel_name">SMS 감시</string>
+    <string name="notif_title">Noowar Toolkit</string>
+    <string name="notif_text">SMS 수신 감시 중</string>
+</resources>
