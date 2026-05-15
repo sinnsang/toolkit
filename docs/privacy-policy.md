@@ -154,4 +154,4 @@ Noowar Toolkit(이하 "앱")은 Android용 개인 유틸리티 앱입니다. SMS
 
 ## 문의
 
-개인정보처리방침 관련 문의: **sinn@hubilon.com**
+개인정보처리방침 관련 문의: **sinnsang@naver.com**
