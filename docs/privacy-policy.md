@@ -74,7 +74,7 @@ If this policy changes, the updated version will be published at this URL with a
 
 ## Contact
 
-If you have questions about this policy, contact: **sinn@hubilon.com**
+If you have questions about this policy, contact: **sinnsang@naver.com**
 
 ---
 
