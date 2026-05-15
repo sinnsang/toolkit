@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Noowar Toolkit</string>
+    <string name="app_name">Noowar SendMagic</string>
 
     <!-- Permissions -->
     <string name="permission_sms_required">SMS 및 연락처 권한이 필요합니다.</string>
     <string name="btn_grant_permission">권한 허용</string>
     <string name="notification_access_required">알림 접근 권한이 필요합니다.</string>
-    <string name="notification_access_guide">설정에서 Noowar Toolkit을 활성화하세요.</string>
+    <string name="notification_access_guide">설정에서 Noowar SendMagic을 활성화하세요.</string>
     <string name="btn_grant_notification_access">알림 접근 허용</string>
 
     <!-- Rule List -->
@@ -73,6 +73,6 @@
 
     <!-- Notification -->
     <string name="notif_channel_name">SMS 감시</string>
-    <string name="notif_title">Noowar Toolkit</string>
+    <string name="notif_title">Noowar SendMagic</string>
     <string name="notif_text">SMS 수신 감시 중</string>
 </resources>

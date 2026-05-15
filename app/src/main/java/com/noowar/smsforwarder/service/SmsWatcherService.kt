@@ -79,12 +79,14 @@ class SmsWatcherService : Service() {
         if (manager.getNotificationChannel(channelId) == null) {
             manager.createNotificationChannel(
                 NotificationChannel(channelId, getString(R.string.notif_channel_name), NotificationManager.IMPORTANCE_LOW)
+                    .apply { setShowBadge(false) }
             )
         }
         return NotificationCompat.Builder(this, channelId)
             .setContentTitle(getString(R.string.notif_title))
             .setContentText(getString(R.string.notif_text))
             .setSmallIcon(android.R.drawable.sym_action_chat)
+            .setBadgeIconType(NotificationCompat.BADGE_ICON_NONE)
             .build()
     }
 

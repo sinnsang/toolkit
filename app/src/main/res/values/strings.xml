@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Noowar Toolkit</string>
+    <string name="app_name">Noowar SendMagic</string>
 
     <!-- Permissions -->
     <string name="permission_sms_required">SMS and contacts permissions are required.</string>
     <string name="btn_grant_permission">Grant Permission</string>
     <string name="notification_access_required">Notification access permission is required.</string>
-    <string name="notification_access_guide">Enable Noowar Toolkit in Settings.</string>
+    <string name="notification_access_guide">Enable Noowar SendMagic in Settings.</string>
     <string name="btn_grant_notification_access">Allow Notification Access</string>
 
     <!-- Rule List -->
@@ -73,6 +73,6 @@
 
     <!-- Notification -->
     <string name="notif_channel_name">SMS Watch</string>
-    <string name="notif_title">Noowar Toolkit</string>
+    <string name="notif_title">Noowar SendMagic</string>
     <string name="notif_text">Monitoring for SMS…</string>
 </resources>
