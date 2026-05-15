@@ -29,6 +29,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,11 +41,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.noowar.smsforwarder.data.ForwardRule
+import com.noowar.smsforwarder.data.MarqueeItem
 import com.noowar.smsforwarder.data.VersionCheck
 import com.noowar.smsforwarder.service.SmsNotificationListener
 import com.noowar.smsforwarder.service.SmsWatcherService
 import com.noowar.smsforwarder.ui.ForcedUpdateDialog
 import com.noowar.smsforwarder.ui.ForwardLogScreen
+import com.noowar.smsforwarder.ui.MarqueeDisplayScreen
+import com.noowar.smsforwarder.ui.MarqueeListScreen
 import com.noowar.smsforwarder.ui.OptionalUpdateDialog
 import com.noowar.smsforwarder.ui.RuleEditScreen
 import com.noowar.smsforwarder.ui.RuleListScreen
@@ -67,6 +72,15 @@ class MainActivity : ComponentActivity() {
 private sealed class UpdatePrompt {
     data class Forced(val url: String) : UpdatePrompt()
     data class Optional(val url: String) : UpdatePrompt()
+}
+
+internal class NavState : ViewModel() {
+    var isEditing by mutableStateOf(false)
+    var editingRule by mutableStateOf<ForwardRule?>(null)
+    var isShowingLog by mutableStateOf(false)
+    var isShowingSettings by mutableStateOf(false)
+    var isShowingMarquee by mutableStateOf(false)
+    var displayingMarqueeItem by mutableStateOf<MarqueeItem?>(null)
 }
 
 @Composable
@@ -176,36 +190,46 @@ private fun MainUI(modifier: Modifier, context: Context, lifecycleOwner: android
             }
         }
         else -> {
-            var editingRule by remember { mutableStateOf<ForwardRule?>(null) }
-            var isEditing by remember { mutableStateOf(false) }
-            var isShowingLog by remember { mutableStateOf(false) }
-            var isShowingSettings by remember { mutableStateOf(false) }
+            val nav: NavState = viewModel()
 
             when {
-                isShowingSettings -> {
-                    SettingsScreen(onBack = { isShowingSettings = false })
+                nav.displayingMarqueeItem != null -> {
+                    MarqueeDisplayScreen(
+                        item = nav.displayingMarqueeItem!!,
+                        onBack = { nav.displayingMarqueeItem = null }
+                    )
                 }
-                isShowingLog -> {
-                    ForwardLogScreen(onBack = { isShowingLog = false })
+                nav.isShowingMarquee -> {
+                    MarqueeListScreen(
+                        onBack = { nav.isShowingMarquee = false },
+                        onDisplay = { item -> nav.displayingMarqueeItem = item }
+                    )
                 }
-                isEditing -> {
+                nav.isShowingSettings -> {
+                    SettingsScreen(onBack = { nav.isShowingSettings = false })
+                }
+                nav.isShowingLog -> {
+                    ForwardLogScreen(onBack = { nav.isShowingLog = false })
+                }
+                nav.isEditing -> {
                     RuleEditScreen(
-                        initial = editingRule,
-                        onBack = { isEditing = false }
+                        initial = nav.editingRule,
+                        onBack = { nav.isEditing = false }
                     )
                 }
                 else -> {
                     RuleListScreen(
                         onAddRule = {
-                            editingRule = null
-                            isEditing = true
+                            nav.editingRule = null
+                            nav.isEditing = true
                         },
                         onEditRule = { rule ->
-                            editingRule = rule
-                            isEditing = true
+                            nav.editingRule = rule
+                            nav.isEditing = true
                         },
-                        onShowLog = { isShowingLog = true },
-                        onShowSettings = { isShowingSettings = true }
+                        onShowLog = { nav.isShowingLog = true },
+                        onShowSettings = { nav.isShowingSettings = true },
+                        onShowMarquee = { nav.isShowingMarquee = true }
                     )
                 }
             }

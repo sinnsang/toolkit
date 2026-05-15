@@ -63,6 +63,37 @@
     <string name="saved_message">Saved.</string>
     <string name="telegram_guide">How to get a bot token:\n1. Search @BotFather on Telegram\n2. Type /newbot and set a name\n3. Enter the token above\n\nFind your Chat ID:\nSend a message to your bot, then visit\nhttps://api.telegram.org/bot{token}/getUpdates\nand look for the chat.id value</string>
 
+    <!-- Marquee -->
+    <string name="title_marquee">LED Marquee</string>
+    <string name="title_add_marquee">Add Marquee</string>
+    <string name="title_edit_marquee">Edit Marquee</string>
+    <string name="cd_marquee">Marquee</string>
+    <string name="no_marquees">No marquees saved.</string>
+    <string name="no_marquees_hint">Tap + to add one.</string>
+    <string name="label_marquee_text">Display Text</string>
+    <string name="section_font">Font</string>
+    <string name="font_sans">Sans</string>
+    <string name="font_serif">Serif</string>
+    <string name="font_mono">Mono</string>
+    <string name="label_font_size">Size: %dsp</string>
+    <string name="section_direction">Scroll Direction</string>
+    <string name="section_text_color">Text Color</string>
+    <string name="section_stroke_color">Stroke</string>
+    <string name="stroke_none">None</string>
+    <string name="label_speed">Speed: %d</string>
+    <string name="label_tts">Read aloud (each cycle)</string>
+    <string name="section_bg_color">Background</string>
+    <string name="color_white">White</string>
+    <string name="color_black">Black</string>
+    <string name="color_red">Red</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_violet">Violet</string>
+    <string name="color_rainbow">Rainbow</string>
+
     <!-- Update dialogs -->
     <string name="update_forced_title">Update Required</string>
     <string name="update_forced_body">This version is no longer supported. Please update the app to continue.</string>

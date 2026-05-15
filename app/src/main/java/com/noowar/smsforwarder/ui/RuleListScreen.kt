@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -43,6 +44,7 @@ fun RuleListScreen(
     onEditRule: (ForwardRule) -> Unit,
     onShowLog: () -> Unit,
     onShowSettings: () -> Unit,
+    onShowMarquee: () -> Unit,
     viewModel: RuleViewModel = viewModel()
 ) {
     val rules by viewModel.rules.collectAsState()
@@ -52,6 +54,9 @@ fun RuleListScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.title_rules)) },
                 actions = {
+                    IconButton(onClick = onShowMarquee) {
+                        Icon(Icons.Default.Tv, contentDescription = stringResource(R.string.cd_marquee))
+                    }
                     IconButton(onClick = onShowLog) {
                         Icon(Icons.AutoMirrored.Filled.List, contentDescription = stringResource(R.string.cd_forward_log))
                     }
