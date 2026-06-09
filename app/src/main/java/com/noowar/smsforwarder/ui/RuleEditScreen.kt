@@ -1,6 +1,8 @@
 package com.noowar.smsforwarder.ui
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -63,16 +65,24 @@ fun RuleEditScreen(
     var channelType by remember { mutableStateOf(initial?.channelType ?: "SMS") }
 
     val senderContactLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickContact()
-    ) { uri ->
-        uri?.let { senderFilter = resolvePhoneNumber(context, it) ?: senderFilter }
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                senderFilter = resolvePhoneNumber(context, uri) ?: senderFilter
+            }
+        }
         focusManager.clearFocus()
     }
 
     val destContactLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickContact()
-    ) { uri ->
-        uri?.let { destination = resolvePhoneNumber(context, it) ?: destination }
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                destination = resolvePhoneNumber(context, uri) ?: destination
+            }
+        }
         focusManager.clearFocus()
     }
 
@@ -111,7 +121,7 @@ fun RuleEditScreen(
                     modifier = Modifier.weight(1f),
                     singleLine = true
                 )
-                OutlinedButton(onClick = { senderContactLauncher.launch(null) }) {
+                OutlinedButton(onClick = { senderContactLauncher.launch(Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)) }) {
                     Text(stringResource(R.string.btn_contacts))
                 }
             }
@@ -173,7 +183,7 @@ fun RuleEditScreen(
                     singleLine = true
                 )
                 if (channelType == "SMS") {
-                    OutlinedButton(onClick = { destContactLauncher.launch(null) }) {
+                    OutlinedButton(onClick = { destContactLauncher.launch(Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI)) }) {
                         Text(stringResource(R.string.btn_contacts))
                     }
                 }
@@ -298,14 +308,11 @@ private fun ToggleButton(label: String, selected: Boolean, onClick: () -> Unit) 
     }
 }
 
-fun resolvePhoneNumber(context: Context, contactUri: Uri): String? {
-    val contactId = contactUri.lastPathSegment ?: return null
+fun resolvePhoneNumber(context: Context, phoneDataUri: Uri): String? {
     val cursor = context.contentResolver.query(
-        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+        phoneDataUri,
         arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER),
-        "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} = ?",
-        arrayOf(contactId),
-        null
+        null, null, null
     )
     return cursor?.use { if (it.moveToFirst()) it.getString(0)?.filter(Char::isDigit) else null }
 }

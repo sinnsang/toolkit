@@ -1,10 +1,12 @@
 package com.noowar.smsforwarder.service
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
@@ -12,12 +14,25 @@ import android.os.Looper
 import android.provider.Telephony
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.noowar.smsforwarder.R
+import com.noowar.smsforwarder.channel.ForwardDedup
+import com.noowar.smsforwarder.channel.ForwardMessage
+import com.noowar.smsforwarder.channel.SmsForwardChannel
+import com.noowar.smsforwarder.channel.TelegramChannel
+import com.noowar.smsforwarder.data.AppDatabase
+import com.noowar.smsforwarder.data.AppSettings
+import com.noowar.smsforwarder.data.ForwardLog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class SmsWatcherService : Service() {
 
     private val pollerThread = HandlerThread("SmsPoller").also { it.start() }
     private val handler = Handler(pollerThread.looper)
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var lastSmsId = -1L
 
     private val pollRunnable = object : Runnable {
@@ -30,6 +45,11 @@ class SmsWatcherService : Service() {
     override fun onCreate() {
         super.onCreate()
         startForeground(NOTIF_ID, buildNotification())
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+            Log.w("SmsForwarder", "[Watcher] READ_SMS not granted, stopping")
+            stopSelf()
+            return
+        }
         lastSmsId = queryLatestSmsId()
         Log.d("SmsForwarder", "[Watcher] started, lastId=$lastSmsId")
         handler.postDelayed(pollRunnable, POLL_MS)
@@ -47,14 +67,57 @@ class SmsWatcherService : Service() {
             "${Telephony.Sms.DATE} DESC"
         ) ?: return
 
+        val id: Long
+        val from: String
+        val body: String
         cursor.use {
             if (!it.moveToFirst()) return
-            val id = it.getLong(it.getColumnIndexOrThrow(Telephony.Sms._ID))
+            id = it.getLong(it.getColumnIndexOrThrow(Telephony.Sms._ID))
             if (id <= lastSmsId) return
             lastSmsId = id
-            val from = it.getString(it.getColumnIndexOrThrow(Telephony.Sms.ADDRESS)) ?: "unknown"
-            val body = it.getString(it.getColumnIndexOrThrow(Telephony.Sms.BODY)) ?: ""
-            Log.d("SmsForwarder", "[SMS] from=$from, body=$body")
+            from = it.getString(it.getColumnIndexOrThrow(Telephony.Sms.ADDRESS)) ?: "unknown"
+            body = it.getString(it.getColumnIndexOrThrow(Telephony.Sms.BODY)) ?: ""
+        }
+
+        Log.d("SmsForwarder", "[Watcher] new SMS from=$from")
+        scope.launch {
+            val db = AppDatabase.getInstance(applicationContext)
+            val rules = db.ruleDao().getEnabledRules()
+            for (rule in rules) {
+                if (!rule.matches(from, body)) {
+                    Log.d("SmsForwarder", "[Watcher] skip rule#${rule.id}")
+                    continue
+                }
+                val dedupKey = "${rule.id}:$from:${body.hashCode()}"
+                if (!ForwardDedup.claim(dedupKey)) {
+                    Log.d("SmsForwarder", "[Watcher] dedup from=$from")
+                    continue
+                }
+                val channel = if (rule.channelType == "TELEGRAM") {
+                    val token = AppSettings.getTelegramToken(applicationContext)
+                    if (token.isBlank()) {
+                        Log.e("SmsForwarder", "[Watcher] Telegram token not set, skip rule#${rule.id}")
+                        continue
+                    }
+                    TelegramChannel(token)
+                } else {
+                    SmsForwardChannel(applicationContext)
+                }
+                val text = rule.formatMessage(from, body)
+                Log.d("SmsForwarder", "[Watcher] forward from=$from via rule#${rule.id} [${rule.channelType}]")
+                val result = channel.send(ForwardMessage(rule.destination, text))
+                db.forwardLogDao().insert(
+                    ForwardLog(
+                        timestamp = System.currentTimeMillis(),
+                        fromNumber = from,
+                        toNumber = rule.destination,
+                        body = body.take(200),
+                        ruleId = rule.id,
+                        success = result.isSuccess,
+                        errorMessage = result.exceptionOrNull()?.message
+                    )
+                )
+            }
         }
     }
 
