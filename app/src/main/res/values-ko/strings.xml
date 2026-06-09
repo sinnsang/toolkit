@@ -94,6 +94,11 @@
     <string name="color_violet">보라</string>
     <string name="color_rainbow">무지개</string>
 
+    <!-- No telephony warning -->
+    <string name="no_telephony_title">SIM 카드 없음</string>
+    <string name="no_telephony_body">이 기기는 SIM 카드를 지원하지 않아 SMS 수신이 불가합니다. SMS 포워딩 기능은 동작하지 않습니다.</string>
+    <string name="btn_ok">확인</string>
+
     <!-- Update dialogs -->
     <string name="update_forced_title">업데이트 필요</string>
     <string name="update_forced_body">이 버전은 더 이상 지원되지 않습니다. 앱을 계속 사용하려면 업데이트하세요.</string>

@@ -49,6 +49,7 @@ import com.noowar.smsforwarder.ui.ForcedUpdateDialog
 import com.noowar.smsforwarder.ui.ForwardLogScreen
 import com.noowar.smsforwarder.ui.MarqueeDisplayScreen
 import com.noowar.smsforwarder.ui.MarqueeListScreen
+import com.noowar.smsforwarder.ui.NoTelephonyDialog
 import com.noowar.smsforwarder.ui.OptionalUpdateDialog
 import com.noowar.smsforwarder.ui.RuleEditScreen
 import com.noowar.smsforwarder.ui.RuleListScreen
@@ -89,6 +90,10 @@ fun AppContent(modifier: Modifier = Modifier) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
     var updatePrompt by remember { mutableStateOf<UpdatePrompt?>(null) }
+    val hasTelephony = remember {
+        context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)
+    }
+    var noTelephonyDismissed by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val info = VersionCheck.fetch() ?: return@LaunchedEffect
@@ -109,7 +114,12 @@ fun AppContent(modifier: Modifier = Modifier) {
             onUpdate = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(prompt.url))) },
             onDismiss = { updatePrompt = null }
         )
-        null -> MainUI(modifier = modifier, context = context, lifecycleOwner = lifecycleOwner)
+        null -> {
+            MainUI(modifier = modifier, context = context, lifecycleOwner = lifecycleOwner)
+            if (!hasTelephony && !noTelephonyDismissed) {
+                NoTelephonyDialog(onDismiss = { noTelephonyDismissed = true })
+            }
+        }
     }
 }
 

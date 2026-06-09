@@ -23,6 +23,21 @@ fun ForcedUpdateDialog(onUpdate: () -> Unit) {
 }
 
 @Composable
+fun NoTelephonyDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.no_telephony_title)) },
+        text = { Text(stringResource(R.string.no_telephony_body)) },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.btn_ok))
+            }
+        },
+        dismissButton = null
+    )
+}
+
+@Composable
 fun OptionalUpdateDialog(onUpdate: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,

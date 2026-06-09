@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.IBinder
 import android.os.Looper
 import android.provider.Telephony
@@ -15,7 +16,8 @@ import com.noowar.smsforwarder.R
 
 class SmsWatcherService : Service() {
 
-    private val handler = Handler(Looper.getMainLooper())
+    private val pollerThread = HandlerThread("SmsPoller").also { it.start() }
+    private val handler = Handler(pollerThread.looper)
     private var lastSmsId = -1L
 
     private val pollRunnable = object : Runnable {
@@ -27,13 +29,13 @@ class SmsWatcherService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        startForeground(NOTIF_ID, buildNotification())
         lastSmsId = queryLatestSmsId()
         Log.d("SmsForwarder", "[Watcher] started, lastId=$lastSmsId")
         handler.postDelayed(pollRunnable, POLL_MS)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(NOTIF_ID, buildNotification())
         return START_STICKY
     }
 
@@ -68,6 +70,7 @@ class SmsWatcherService : Service() {
 
     override fun onDestroy() {
         handler.removeCallbacks(pollRunnable)
+        pollerThread.quitSafely()
         super.onDestroy()
     }
 

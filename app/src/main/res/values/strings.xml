@@ -94,6 +94,11 @@
     <string name="color_violet">Violet</string>
     <string name="color_rainbow">Rainbow</string>
 
+    <!-- No telephony warning -->
+    <string name="no_telephony_title">No SIM Card</string>
+    <string name="no_telephony_body">This device does not support SIM cards. SMS receiving is unavailable, so SMS forwarding will not work.</string>
+    <string name="btn_ok">OK</string>
+
     <!-- Update dialogs -->
     <string name="update_forced_title">Update Required</string>
     <string name="update_forced_body">This version is no longer supported. Please update the app to continue.</string>

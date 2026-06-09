@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -50,6 +51,7 @@ fun RuleEditScreen(
     viewModel: RuleViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     val isNew = initial == null
 
     var senderFilter by remember { mutableStateOf(initial?.senderFilter ?: "") }
@@ -64,12 +66,14 @@ fun RuleEditScreen(
         ActivityResultContracts.PickContact()
     ) { uri ->
         uri?.let { senderFilter = resolvePhoneNumber(context, it) ?: senderFilter }
+        focusManager.clearFocus()
     }
 
     val destContactLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickContact()
     ) { uri ->
         uri?.let { destination = resolvePhoneNumber(context, it) ?: destination }
+        focusManager.clearFocus()
     }
 
     Scaffold(
