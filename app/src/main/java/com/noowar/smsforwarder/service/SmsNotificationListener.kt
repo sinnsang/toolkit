@@ -1,7 +1,6 @@
 package com.noowar.smsforwarder.service
 
 import android.app.Notification
-import android.provider.ContactsContract
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
@@ -35,7 +34,7 @@ class SmsNotificationListener : NotificationListenerService() {
         val body = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString() ?: return
 
         scope.launch {
-            val from = resolvePhoneFromName(displayName) ?: displayName
+            val from = displayName
             val db = AppDatabase.getInstance(applicationContext)
             val rules = db.ruleDao().getEnabledRules()
 
@@ -74,20 +73,6 @@ class SmsNotificationListener : NotificationListenerService() {
                     )
                 )
             }
-        }
-    }
-
-    private fun resolvePhoneFromName(displayName: String): String? {
-        val cleanName = displayName.replace(Regex("\\p{Cf}"), "")
-        val cursor = contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER),
-            "${ContactsContract.Data.DISPLAY_NAME} = ?",
-            arrayOf(cleanName),
-            null
-        )
-        return cursor?.use {
-            if (it.moveToFirst()) it.getString(0)?.filter(Char::isDigit) else null
         }
     }
 
