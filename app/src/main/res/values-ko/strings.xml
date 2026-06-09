@@ -107,6 +107,12 @@
     <string name="btn_update_now">지금 업데이트</string>
     <string name="btn_later">나중에</string>
 
+    <!-- Exit dialog -->
+    <string name="exit_dialog_title">앱 종료</string>
+    <string name="exit_dialog_body">앱을 종료하시겠습니까?</string>
+    <string name="exit_dialog_confirm">종료</string>
+    <string name="exit_dialog_cancel">취소</string>
+
     <!-- Notification -->
     <string name="notif_channel_name">SMS 감시</string>
     <string name="notif_title">Noowar SendMagic</string>

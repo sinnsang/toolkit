@@ -107,6 +107,12 @@
     <string name="btn_update_now">Update Now</string>
     <string name="btn_later">Later</string>
 
+    <!-- Exit dialog -->
+    <string name="exit_dialog_title">Exit</string>
+    <string name="exit_dialog_body">Do you want to exit the app?</string>
+    <string name="exit_dialog_confirm">Exit</string>
+    <string name="exit_dialog_cancel">Cancel</string>
+
     <!-- Notification -->
     <string name="notif_channel_name">SMS Watch</string>
     <string name="notif_title">Noowar SendMagic</string>

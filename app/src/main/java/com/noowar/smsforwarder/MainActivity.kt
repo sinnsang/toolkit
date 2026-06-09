@@ -19,10 +19,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -200,6 +204,37 @@ private fun MainUI(modifier: Modifier, context: Context, lifecycleOwner: android
         }
         else -> {
             val nav: NavState = viewModel()
+            val activity = context as? android.app.Activity
+            var showExitDialog by remember { mutableStateOf(false) }
+
+            BackHandler {
+                when {
+                    nav.displayingMarqueeItem != null -> nav.displayingMarqueeItem = null
+                    nav.isShowingMarquee -> nav.isShowingMarquee = false
+                    nav.isShowingSettings -> nav.isShowingSettings = false
+                    nav.isShowingLog -> nav.isShowingLog = false
+                    nav.isEditing -> nav.isEditing = false
+                    else -> showExitDialog = true
+                }
+            }
+
+            if (showExitDialog) {
+                AlertDialog(
+                    onDismissRequest = { showExitDialog = false },
+                    title = { Text(stringResource(R.string.exit_dialog_title)) },
+                    text = { Text(stringResource(R.string.exit_dialog_body)) },
+                    confirmButton = {
+                        TextButton(onClick = { activity?.finish() }) {
+                            Text(stringResource(R.string.exit_dialog_confirm))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showExitDialog = false }) {
+                            Text(stringResource(R.string.exit_dialog_cancel))
+                        }
+                    }
+                )
+            }
 
             when {
                 nav.displayingMarqueeItem != null -> {
